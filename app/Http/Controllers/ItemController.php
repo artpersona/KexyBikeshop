@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Items;
+use App\Inventory;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class ItemController extends Controller
 {
     public function index(){
-      $items = Items::paginate(5);
+      $items = Inventory::all();
         return view('items.index',[
             'items' => $items,]);
     }

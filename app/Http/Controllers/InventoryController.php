@@ -7,7 +7,21 @@ use App\Inventory;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class InventoryController extends Controller
-{
+{   
+
+    public function checkout(Request $request){
+        $item = Inventory::where('item_code','=',$request->product_id)->get();
+       
+        return response()->json($item);
+    }
+
+    public function inventoryUpdate(Request $request){
+        $item  = Inventory::where('item_code','=',$request->product_id)->get()->first();
+        $item -> quantity_left = $request -> quantity_left;
+        $item -> save();
+        return response()->json($item);
+    }
+
     public function index(){
       $inventory = Inventory::paginate(5);
         return view('inventory.index',[

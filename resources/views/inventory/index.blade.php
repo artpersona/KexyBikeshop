@@ -45,8 +45,9 @@
                                             <input type="text" class="form-control" id="supplier" name="supplier" required>  </label>
                                         </div>
                                         <div class="form-group">
-                                            <label for="date_received"> Date Received:
-                                            <input type="text" class="form-control" id="date_received" name="date_received" required>  </label>
+                                            <label for="date_received"> Date Received:      </label>
+                                            <input type='text' data-language='en' class="datepicker-here form-control" data-position="right top" id="date_received" name="date_received" required/>
+                                         
                                         </div>
                                         <div class="form-group">
                                             <label for="original_price"> Original Price:

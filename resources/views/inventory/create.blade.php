@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <div class="container">
-    <form action="/inventories" method="post" action="/inventories">
+    <form action="/inventories" method="post" ">
      @csrf
      <div class="shadow p-3 mb-5 bg-white rounded">
      <div class="row">
@@ -23,13 +23,9 @@
             <input type="text" id="selling_price" name="selling_price" required>
             <label for="quantity"> Quantity: </label>
             <input type="text" id="quantity" name="quantity" required>
-        <label for="quantity_left"> Quantity Left: </label>
-            <input type="text" id="quantity_left" name="quantity_left" required>
-            <label for="total"> Total: </label>
-            <input type="text" id="total" name="total" required>
-            <label for="profit"> Profit: </label>
-            <input type="text" id="profit" name="profit" required>
-            <br>
+            
+            
+            
             <button type="submit" value="Add Item" class="btn btn-light">
             Add Item
             </button> </form>

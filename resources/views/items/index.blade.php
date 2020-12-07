@@ -4,71 +4,7 @@
 
 <div class="d-flex justify-content-center"> <label style="margin-top: 0px; font-size:45px;"> Product </label> </div>
         <div class="content" style="margin: 0px;">
-            <div class="container px-lg-5">
-                <div class="row mx-lg-n5">
-                    <div class="col py-3"> 
-                        <label> Total Number of Items: [ ] </label>
-                    </div>
-                    <div class="col py-3"> 
-                        <label> Items Quantity below 10: [ ] </label>
-                    </div>
-                 </div>
-            </div>
-            <div class="container">
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
-                   
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="margin-top:0px">
-                        Add Product
-                   </button>
-                        <div class="col">
-                    
-                                <!-- Modal -->
-                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                         <div class="modal-content">
-                                            <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel"> Create a New Item </h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                    <form action="/items" method="post" action="/items">
-                                     @csrf
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <label for="product_code"> Product Code:
-                                            <input type="text" class="form-control" id="product_code" name="product_code" required> </label>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="product_name"> Product Name:
-                                            <input type="text" class="form-control" id="product_name" name="product_name" required>  </label>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="category"> Category:
-                                            <input type="text" class="form-control" id="category" name="category" required>  </label>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="quantity"> Quantity:
-                                            <input type="text" class="form-control" id="quantity" name="quantity" required>  </label>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="selling_price"> Selling Price:
-                                            <input type="text" class="form-control" id="selling_price" name="selling_price" required>  </label>
-                                        </div>
-                            
-                                    </div>
-                                         <div class="modal-footer">
-                                         <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-                                         <button type="submit" class="btn btn-light"> Add Item</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            </form>
-                            </div>
-                            </div>
-                            <div class="col"></div>
-            </div>
+            <div class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Transact</div> 
             <div class="container" style="margin-top: 15px;">
                 <table class="table table-bordered" id="data-table">
                     <thead>
@@ -84,10 +20,10 @@
                     <tbody>
                 @foreach($items as $item)
                 <tr>
-                    <td> {{ $item -> product_code}}</td> 
-                    <td> {{ $item -> product_name}}</td>
+                    <td> {{ $item -> item_code}}</td> 
+                    <td> {{ $item -> item_name}}</td>
                     <td> {{ $item ->category}}</td>
-                    <td> {{ $item ->quantity}}</td>
+                    <td> {{ $item ->quantity_left}}</td>
                     <td> {{ $item ->selling_price}}</td>
                     <td> 
                     
@@ -153,4 +89,123 @@
             </table>
             </div>
         </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                 <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"> Transact </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <form >
+                @csrf
+            <div class="modal-body">
+                <div class="form-group">
+                    <label> Select Product </label>
+                    <select name="s_product" class="form-control">
+                        @foreach($items as $item)
+                        <option cllass="form-control" value={{$item -> item_code}}>{{$item -> item_name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="item_name"> Quantity:
+                    <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"  class="form-control"  name="s_quantity" required>  </label>
+                </div>
+                
+            </div>
+            </form>
+                 <div class="modal-footer">
+                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                 <div id="checkOut" class="btn btn-success">Checkout</div>
+                </div>
+         
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function(){
+        $('#checkOut').click(function(e){
+            var product_id =  $('select[name="s_product"]').val()
+            var quantity  = $('input[name="s_quantity"]').val()
+
+            $.ajax({
+                type: 'POST',
+                url: 'checkout',
+                data: {
+                    '_token' : $('input[name="_token"]').val(),
+                    'product_id': product_id,
+          
+                },
+            success: function(data){
+                console.log(data[0])
+                console.log(quantity>data[0].quantity)
+                var total = quantity * data[0].selling_price;
+                var newQuantity = data[0].quantity_left - quantity;
+                if(quantity>data[0].quantity_left){
+                    swal({
+                    title: "Not Enough Stocks",
+                    text: `${data[0].quantity_left} products left`,
+                    type: "error",
+                    confirmButtonText: "Acknowledge",
+                    closeOnConfirm: false
+                    })
+
+                }
+
+                else{
+                    swal({
+                    title: `Total Price: ${total}`,
+                    text: `Proceed With Checkout?`,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Confirm",
+                    closeOnConfirm: false
+                },
+                function(){
+                        $.ajax({
+                        type:'POST',
+                        url:'inventoryUpdate',
+                        data:{
+                        '_token' : $('input[name="_token"]').val(),
+                        'product_id': product_id,
+                        'quantity_left': newQuantity
+                        },
+                        success: function(data){
+                            swal({
+                            title: "Inventory Updated",
+                            text: 'Transaction complete',
+                            type: "success",
+                            confirmButtonText: "Acknowledge",
+                            closeOnConfirm: false
+                            },
+                            function(){
+                                location.reload()
+                            }  
+                            )
+
+                        }
+                    })
+                }
+               
+                
+                
+                )   
+                }
+                
+               
+                
+            },
+        })
+
+        })
+    })
+
+</script>
+    
 @endsection

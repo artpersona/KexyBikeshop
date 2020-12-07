@@ -23,6 +23,11 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="/css/datepicker.css" rel="stylesheet" type="text/css">
+    <script src="/js/datepicker.js"></script>
+    
+
+
 </head>
 <body>
     <div id="app">
@@ -87,11 +92,14 @@
              Copyright 2020 Kexy's Bike Shop
     </footer>
     <script src="http://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"> </script>
+    <script src="/js/datepicker.en.js"></script>    
     <script>
     $(document).ready( function () {
         $.noConflict();
         $('#data-table').DataTable();
+
     } );
     </script>
+    @yield('scripts')
 </body>
 </html>

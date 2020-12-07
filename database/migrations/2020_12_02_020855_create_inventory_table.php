@@ -20,7 +20,7 @@ class CreateInventoryTable extends Migration
             $table->string('item_name');
             $table->string('category');
             $table->string('supplier');
-            $table->string('date_received');
+            $table->date('date_received');
             $table->double('original_price', 15, 2);
             $table->double('selling_price', 15, 2);
             $table->integer('quantity');
